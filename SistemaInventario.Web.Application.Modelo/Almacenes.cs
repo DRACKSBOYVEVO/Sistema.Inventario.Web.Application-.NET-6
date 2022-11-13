@@ -14,7 +14,7 @@ namespace SistemaInventario.Web.Application.Modelo
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Nombre { get; set; }
-        public string Direccion { get; set; }
+        public string? Direccion { get; set; }
         public int EmpresaId { get; set; }
         public bool Estatus { get; set; }
         public DateTime Fecha { get; set; }
