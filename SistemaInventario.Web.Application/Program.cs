@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SistemaInventario.Web.Application.DataContext;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,11 +9,19 @@ builder.Services.AddControllersWithViews();
 
 //Accediendo a la conexion declarada en el appsettings
 //SistemaInventarioDBContext se pone a dispocision para todo el sistema
-
 ConfigurationManager configuration = builder.Configuration;
-
 var connectionSQL = configuration.GetConnectionString("ConexionSQL");
 builder.Services.AddDbContext<SistemaInventarioDBContext>(options => options.UseSqlServer(connectionSQL));
+
+//Autenticacion mediante Cookies
+//Se creara una coookie del lado del cliente con un token que me diga que el usuario este logueado
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
+    options =>
+    {
+        options.LoginPath = "/Login";
+        options.Cookie.Name = "inventariosCookie";
+    }
+);
 
 var app = builder.Build();
 
@@ -28,6 +37,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
